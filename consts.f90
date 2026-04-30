@@ -20,31 +20,59 @@ module consts
         procedure vec_add
     end interface
 
+    interface vec_div
+        procedure vec_div_int
+        procedure vec_div_real
+    end interface
+
     contains
     
         pure function vec_subt(a, b) result(c)
             type(vector), intent(in)    :: a, b
             type(vector)                :: c
-
-            real(kind = dp)             :: l, m, n
             
-            l = a%i - b%i
-            m = a%j - b%j
-            n = a%k - b%k
-
-            c = vector(l, m, n)
+            c%i = a%i - b%i
+            c%j = a%j - b%j
+            c%k = a%k - b%k
         end function
 
         pure function vec_add(a, b) result(c)
             type(vector), intent(in)    :: a, b
             type(vector)                :: c
-
-            real(kind = dp)             :: l, m, n
             
-            l = a%i + b%i
-            m = a%j + b%j
-            n = a%k + b%k
+            c%i = a%i + b%i
+            c%j = a%j + b%j
+            c%k = a%k + b%k
+        end function
 
-            c = vector(l, m, n)
-        end function   
+        pure function vec_div_int(a, b) result(c)
+            type(vector), intent(in)    :: a
+            integer, intent(in)         :: b
+            type(vector)                :: c
+            
+            real(kind = dp)             :: b_real
+
+        b_real = real(b, kind = dp)
+
+            c%i = a%i / b_real
+            c%j = a%j / b_real
+            c%k = a%k / b_real
+        end function
+
+        pure function vec_div_real(a, b) result(c)
+            type(vector), intent(in)    :: a
+            real(kind = dp), intent(in) :: b
+            type(vector)                :: c
+
+            c%i = a%i / b
+            c%j = a%j / b
+            c%k = a%k / b
+        end function
+
+        pure function dot_p(a, b) result(c)
+            type(vector), intent(in)    :: a, b
+            real(kind = dp)             :: c
+
+            c = (a%i * b%i) +(a%j * b%j) + (a%k * b%k)
+        end function
 end module
