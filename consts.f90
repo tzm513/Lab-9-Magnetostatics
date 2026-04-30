@@ -185,6 +185,15 @@ module consts
             c = (a%i * b%i) +(a%j * b%j) + (a%k * b%k)
         end function
 
+        pure function cross_p(a, b) result(c)
+            type(vector), intent(in)    :: a, b
+            type(vector)                :: c
+
+            c%i = a%j*b%k - a%k*b%j
+            c%j = a%i*b%k - a%k*b%i
+            c%k = a%i*b%j - a%j*b%i
+        end function
+
         pure function pythagoras(a) result(b)
             type(vector), intent(in)    :: a
             real(kind = dp)             :: b
