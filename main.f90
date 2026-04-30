@@ -8,7 +8,7 @@
 
     type :: magnet_face
             ! Vertices of the plane
-        type(vector)    :: vertex(4)
+        type(vector)    :: vertices(4)
             ! Normal vector to the plane
         type(vector)    :: normal
             ! Magnitude of the magnetisation perpendicular to the surface
@@ -29,13 +29,11 @@
         real(kind = dp)                 :: dp
     end type
 
-        ! #####################
-        ! Variable Declarations
-        ! #####################
-
     type(t_magnet)  :: bar
 
     integer         :: count
+
+
     
 
         ! Set default values for centred 2x2x10 bar magnet with uniform charge (0, 0, 1)
@@ -43,17 +41,47 @@
     bar%centre = vector(0, 0, 0)
     bar%dp = 0.01_dp
 
+        ! Vertices(1) = bottom left, Vertices(2) = bottom right, Vertices(3) = top left, Vertices(4) = to right
+        ! Looking from +x, +y, +z
 
+    bar%faces(1)%vertices(1) = vector(-2, -2, -5)
+    bar%faces(1)%vertices(2) = vector(-2,  2, -5)
+    bar%faces(1)%vertices(3) = vector(-2, -2,  5)
+    bar%faces(1)%vertices(4) = vector(-2,  2,  5)
+
+    bar%faces(2)%vertices(1) = vector(2,  -2, -5)
+    bar%faces(2)%vertices(2) = vector(2,   2, -5)
+    bar%faces(2)%vertices(3) = vector(2,  -2,  5)
+    bar%faces(2)%vertices(4) = vector(2,   2,  5)
+
+    bar%faces(3)%vertices(1) = vector(-2, -2, -5)
+    bar%faces(3)%vertices(2) = vector( 2, -2, -5)
+    bar%faces(3)%vertices(3) = vector(-2, -2,  5)
+    bar%faces(3)%vertices(4) = vector( 2, -2,  5)
+
+    bar%faces(4)%vertices(1) = vector(-2,  2, -5)
+    bar%faces(4)%vertices(2) = vector( 2,  2, -5)
+    bar%faces(4)%vertices(3) = vector(-2,  2,  5)
+    bar%faces(4)%vertices(4) = vector( 2,  2,  5)
+
+    bar%faces(5)%vertices(1) = vector(-2, -2, -5)
+    bar%faces(5)%vertices(2) = vector( 2,  2, -5)
+    bar%faces(5)%vertices(3) = vector( 2, -2, -5)
+    bar%faces(5)%vertices(4) = vector(-2,  2, -5)
+
+    bar%faces(6)%vertices(1) = vector(-2, -2,  5)
+    bar%faces(6)%vertices(2) = vector( 2,  2,  5)
+    bar%faces(6)%vertices(3) = vector( 2, -2,  5)
+    bar%faces(6)%vertices(4) = vector(-2,  2,  5)
 
     do count = 1, size(bar%faces)
-        bar%faces(count)%normal = cross_p(bar%faces(count)%vertex(1) - bar%faces(count)%vertex(2), &
-        & bar%faces(count)%vertex(2) - bar%faces(count)%vertex(3))
+        bar%faces(count)%normal = cross_p(bar%faces(count)%vertices(1) - bar%faces(count)%vertices(2), &
+        & bar%faces(count)%vertices(2) - bar%faces(count)%vertices(3))
 
         call surface_magnetisation(bar%faces(count), vector(0, 0, 1))
-        bar%faces(count)%resolution(1) = nint(pythagoras(bar%faces(count)%vertex(1) - bar%faces(count)%vertex(2)) / bar%dp)
-        bar%faces(count)%resolution(2) = nint(pythagoras(bar%faces(count)%vertex(2) - bar%faces(count)%vertex(3)) / bar%dp)
+        bar%faces(count)%resolution(1) = nint(pythagoras(bar%faces(count)%vertices(1) - bar%faces(count)%vertices(2)) / bar%dp)
+        bar%faces(count)%resolution(2) = nint(pythagoras(bar%faces(count)%vertices(2) - bar%faces(count)%vertices(3)) / bar%dp)
     end do
-
 
     contains
 
@@ -71,14 +99,14 @@
             B = vector(0, 0, 0)
 
                 ! Calculate the size of the distance step over the plane
-            dx = (face%vertex(2) - face%vertex(1)) / face%resolution(1)
-            dy = (face%vertex(3) - face%vertex(2)) / face%resolution(2)
+            dx = (face%vertices(2) - face%vertices(1)) / face%resolution(1)
+            dy = (face%vertices(3) - face%vertices(2)) / face%resolution(2)
 
                 ! Nested loops to step over the whole plane which is being considered
             do cx = 0, face%resolution(1)
                 do cy = 0, face%resolution(2)
                         ! Calculate position of currently considered point on the plane
-                    surface_pos = face%vertex(1) + cx*dx + cy*dy
+                    surface_pos = face%vertices(1) + cx*dx + cy*dy
                         ! Distance from field point to plane point
                     dist = pos - surface_pos
 
