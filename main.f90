@@ -25,7 +25,7 @@
         type(magnet_face), allocatable  :: faces(:)
             ! Centre coordinate of the magnet
         type(vector)                    :: centre
-            ! Distance between each discrete position (will undergo nint to esnure integer number of evenly spaced positions) 
+            ! Distance between each discrete position (will undergo nint to ensure integer number of evenly spaced positions) 
         real(kind = dp)                 :: dp
     end type
 
@@ -44,7 +44,11 @@
     bar%dp = 0.01_dp
 
 
-    do count = 0, size(bar%faces)
+
+    do count = 1, size(bar%faces)
+        bar%faces(count)%normal = cross_p(bar%faces(count)%vertex(1) - bar%faces(count)%vertex(2), &
+        & bar%faces(count)%vertex(2) - bar%faces(count)%vertex(3))
+
         call surface_magnetisation(bar%faces(count), vector(0, 0, 1))
         bar%faces(count)%resolution(1) = nint(pythagoras(bar%faces(count)%vertex(1) - bar%faces(count)%vertex(2)) / bar%dp)
         bar%faces(count)%resolution(2) = nint(pythagoras(bar%faces(count)%vertex(2) - bar%faces(count)%vertex(3)) / bar%dp)
