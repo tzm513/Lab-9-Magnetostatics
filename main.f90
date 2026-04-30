@@ -15,6 +15,8 @@
         real(kind = dp) :: perp_magnetisation
             ! Resolution constant to determine how many points should be considered
         integer         :: resolution(2)
+            ! Surface area of face
+        real(kind = dp) :: surface_area
     end type
 
         ! Create variable type to store details of the bar magnet inducing the force
@@ -41,6 +43,7 @@
     bar%centre = vector(0, 0, 0)
     bar%dp = 0.01_dp
 
+
     do count = 0, size(bar%faces)
         call surface_magnetisation(bar%faces(count), vector(0, 0, 1))
         bar%faces(count)%resolution(1) = nint(pythagoras(bar%faces(count)%vertex(1) - bar%faces(count)%vertex(2)) / bar%dp)
@@ -63,15 +66,19 @@
 
             B = vector(0, 0, 0)
 
+                ! Calculate the size of the distance step over the plane
             dx = (face%vertex(2) - face%vertex(1)) / face%resolution(1)
             dy = (face%vertex(3) - face%vertex(2)) / face%resolution(2)
 
-
+                ! Nested loops to step over the whole plane which is being considered
             do cx = 0, face%resolution(1)
                 do cy = 0, face%resolution(2)
+                        ! Calculate position of currently considered point on the plane
                     surface_pos = face%vertex(1) + cx*dx + cy*dy
+                        ! Distance from field point to plane point
                     dist = pos - surface_pos
 
+                        ! Sum field strength from each point on the surface
                     B = B + ((10.0_dp**(-7)) * (dist * face%perp_magnetisation) &
                     & / (pythagoras(dist)**3))
                 end do
@@ -84,8 +91,10 @@
 
             integer                             :: cell_count
 
+                ! Number of cells on plane
             cell_count = self%resolution(1) * self%resolution(2)
 
-            self%perp_magnetisation = dot_p(self%normal, magnetisation) / cell_count
+                ! Magnitude of magnetisation perpendicular to the plane per consideration cell
+            self%perp_magnetisation = dot_p(self%normal, magnetisation) * self%surface_area / cell_count
         end subroutine
 end program
