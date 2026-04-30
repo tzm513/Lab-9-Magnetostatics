@@ -161,7 +161,7 @@ module consts
             
             real(kind = dp)             :: b_real
 
-        b_real = real(b, kind = dp)
+            b_real = real(b, kind = dp)
 
             c%i = a%i / b_real
             c%j = a%j / b_real
