@@ -75,4 +75,12 @@ module consts
 
             c = (a%i * b%i) +(a%j * b%j) + (a%k * b%k)
         end function
+
+        pure function pythagoras(a) result(b)
+            type(vector), intent(in)    :: a
+            real(kind = dp)             :: b
+
+            b = a%i**2 + a%j**2 + a%k**2
+            b = sqrt(b)
+        end function
 end module
