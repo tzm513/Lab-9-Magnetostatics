@@ -37,14 +37,13 @@
         ! Field strength values and current position
     real(kind = dp) :: field(3), field_dir(3)
     real(kind = dp) :: position(3)
+        ! Starting positions to loop over
+    real(kind = dp) :: positions(8, 3)
 
         ! File referencing and error checking
     integer             :: unit
     integer             :: iostat
     character(len=50)   :: iomsg = ''
-    
-        ! Start position for magnetic field line
-    position = (/1.0_dp, 1.0_dp, 5.01_dp/)
 
         ! Set default values for centred 2x2x10 bar magnet with uniform charge (0, 0, 1)
     bar%centre = (/0, 0, 0/)
@@ -104,21 +103,36 @@
         stop
     end if
 
-    do
-        field = (/0.0_dp, 0.0_dp, 0.0_dp/)
-            ! Sum the field strength from each face
-        do c2 = 1, size(bar%faces)
-            field = field + B(bar%faces(c2), position)
+    positions(1, :) = (/ 0.8_dp,  0.8_dp, 5.01_dp/)
+    positions(2, :) = (/ 0.8_dp,  0.0_dp, 5.01_dp/)
+    positions(3, :) = (/ 0.8_dp, -0.8_dp, 5.01_dp/)
+
+    positions(4, :) = (/ 0.0_dp,  0.8_dp, 5.01_dp/)
+    positions(5, :) = (/ 0.0_dp, -0.8_dp, 5.01_dp/)
+    
+    positions(6, :) = (/-0.8_dp,  0.8_dp, 5.01_dp/)
+    positions(7, :) = (/-0.8_dp,  0.0_dp, 5.01_dp/)
+    positions(8, :) = (/-0.8_dp, -0.8_dp, 5.01_dp/)
+
+    do c1 = 1, 8
+        position = positions(c1, :)
+        do
+            field = (/0.0_dp, 0.0_dp, 0.0_dp/)
+                ! Sum the field strength from each face
+            do c2 = 1, size(bar%faces)
+                field = field + B(bar%faces(c2), position)
+            end do
+            field_dir = field / length(field)
+
+            write(unit,*) position, field_dir, length(field)
+
+                ! Take small step along the field line
+            position = position + (0.1_dp * field_dir)
+
+                ! Stop point (needs modifying)
+            if((abs(position(1)) < 2.0_dp) .and. (abs(position(2)) < 2.0_dp) .and. (abs(position(3)) < 5.0_dp)) exit
         end do
-        field_dir = field / length(field)
-
-        write(unit,*) position, field_dir, length(field)
-
-            ! Take small step along the field line
-        position = position + (0.1_dp * field_dir)
-
-            ! Stop point (needs modifying)
-        if((abs(position(1)) < 2.0_dp) .and. (abs(position(2)) < 2.0_dp) .and. (abs(position(3)) < 5.0_dp)) exit
+        print*, c1, " completed"
     end do
 
     close(unit)
