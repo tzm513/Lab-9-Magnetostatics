@@ -31,18 +31,20 @@
 
     type(t_magnet)  :: bar
 
-    integer         :: count
-    integer         :: temp
+        ! Counters for loops
+    integer         :: c1, c2
 
+        ! Field strength values and current position
     real(kind = dp) :: field(3), field_dir(3)
     real(kind = dp) :: position(3)
 
-
+        ! File referencing and error checking
     integer             :: unit
     integer             :: iostat
     character(len=50)   :: iomsg = ''
     
-    position = (/2.0_dp, 0.0_dp, 5.01_dp/)
+        ! Start position for magnetic field line
+    position = (/1.0_dp, 1.0_dp, 5.01_dp/)
 
         ! Set default values for centred 2x2x10 bar magnet with uniform charge (0, 0, 1)
     bar%centre = (/0, 0, 0/)
@@ -50,62 +52,75 @@
     unit = 11
 
     ! Vertices of the magnet
-    bar%faces(5)%vertices(2, :) = (/-2.0_dp, -2.0_dp, -5.0_dp/)
-    bar%faces(2)%vertices(1, :) = (/-2.0_dp, -2.0_dp, -5.0_dp/)
-    bar%faces(6)%vertices(1, :) = (/-2.0_dp, -2.0_dp, -5.0_dp/)
+    bar%faces(5)%vertices(2, :) = (/-1.0_dp, -1.0_dp, -5.0_dp/)
+    bar%faces(2)%vertices(1, :) = (/-1.0_dp, -1.0_dp, -5.0_dp/)
+    bar%faces(6)%vertices(1, :) = (/-1.0_dp, -1.0_dp, -5.0_dp/)
 
-    bar%faces(2)%vertices(2, :) = (/-2.0_dp,  2.0_dp, -5.0_dp/)
-    bar%faces(3)%vertices(1, :) = (/-2.0_dp,  2.0_dp, -5.0_dp/)
-    bar%faces(6)%vertices(2, :) = (/-2.0_dp,  2.0_dp, -5.0_dp/)
+    bar%faces(2)%vertices(2, :) = (/-1.0_dp,  1.0_dp, -5.0_dp/)
+    bar%faces(3)%vertices(1, :) = (/-1.0_dp,  1.0_dp, -5.0_dp/)
+    bar%faces(6)%vertices(2, :) = (/-1.0_dp,  1.0_dp, -5.0_dp/)
 
-    bar%faces(3)%vertices(2, :) = (/ 2.0_dp,  2.0_dp, -5.0_dp/)
-    bar%faces(4)%vertices(1, :) = (/ 2.0_dp,  2.0_dp, -5.0_dp/)
-    bar%faces(6)%vertices(3, :) = (/ 2.0_dp,  2.0_dp, -5.0_dp/)
+    bar%faces(3)%vertices(2, :) = (/ 1.0_dp,  1.0_dp, -5.0_dp/)
+    bar%faces(4)%vertices(1, :) = (/ 1.0_dp,  1.0_dp, -5.0_dp/)
+    bar%faces(6)%vertices(3, :) = (/ 1.0_dp,  1.0_dp, -5.0_dp/)
 
-    bar%faces(4)%vertices(2, :) = (/ 2.0_dp, -2.0_dp, -5.0_dp/)
-    bar%faces(5)%vertices(1, :) = (/ 2.0_dp, -2.0_dp, -5.0_dp/)
-    bar%faces(6)%vertices(4, :) = (/ 2.0_dp, -2.0_dp, -5.0_dp/)
-
-
-    bar%faces(5)%vertices(3, :) = (/-2.0_dp, -2.0_dp, 5.0_dp/)
-    bar%faces(2)%vertices(4, :) = (/-2.0_dp, -2.0_dp, 5.0_dp/)
-    bar%faces(1)%vertices(1, :) = (/-2.0_dp, -2.0_dp, 5.0_dp/)
-
-    bar%faces(2)%vertices(3, :) = (/-2.0_dp,  2.0_dp, 5.0_dp/)
-    bar%faces(3)%vertices(4, :) = (/-2.0_dp,  2.0_dp, 5.0_dp/)
-    bar%faces(1)%vertices(2, :) = (/-2.0_dp,  2.0_dp, 5.0_dp/)
-
-    bar%faces(3)%vertices(3, :) = (/ 2.0_dp,  2.0_dp, 5.0_dp/)
-    bar%faces(4)%vertices(4, :) = (/ 2.0_dp,  2.0_dp, 5.0_dp/)
-    bar%faces(1)%vertices(3, :) = (/ 2.0_dp,  2.0_dp, 5.0_dp/)
-
-    bar%faces(4)%vertices(3, :) = (/ 2.0_dp, -2.0_dp, 5.0_dp/)
-    bar%faces(5)%vertices(4, :) = (/ 2.0_dp, -2.0_dp, 5.0_dp/)
-    bar%faces(1)%vertices(4, :) = (/ 2.0_dp, -2.0_dp, 5.0_dp/)
+    bar%faces(4)%vertices(2, :) = (/ 1.0_dp, -1.0_dp, -5.0_dp/)
+    bar%faces(5)%vertices(1, :) = (/ 1.0_dp, -1.0_dp, -5.0_dp/)
+    bar%faces(6)%vertices(4, :) = (/ 1.0_dp, -1.0_dp, -5.0_dp/)
 
 
-    do count = 1, size(bar%faces)
-        
+    bar%faces(5)%vertices(3, :) = (/-1.0_dp, -1.0_dp, 5.0_dp/)
+    bar%faces(2)%vertices(4, :) = (/-1.0_dp, -1.0_dp, 5.0_dp/)
+    bar%faces(1)%vertices(4, :) = (/-1.0_dp, -1.0_dp, 5.0_dp/)
+
+    bar%faces(2)%vertices(3, :) = (/-1.0_dp,  1.0_dp, 5.0_dp/)
+    bar%faces(3)%vertices(4, :) = (/-1.0_dp,  1.0_dp, 5.0_dp/)
+    bar%faces(1)%vertices(3, :) = (/-1.0_dp,  1.0_dp, 5.0_dp/)
+
+    bar%faces(3)%vertices(3, :) = (/ 1.0_dp,  1.0_dp, 5.0_dp/)
+    bar%faces(4)%vertices(4, :) = (/ 1.0_dp,  1.0_dp, 5.0_dp/)
+    bar%faces(1)%vertices(2, :) = (/ 1.0_dp,  1.0_dp, 5.0_dp/)
+
+    bar%faces(4)%vertices(3, :) = (/ 1.0_dp, -1.0_dp, 5.0_dp/)
+    bar%faces(5)%vertices(4, :) = (/ 1.0_dp, -1.0_dp, 5.0_dp/)
+    bar%faces(1)%vertices(1, :) = (/ 1.0_dp, -1.0_dp, 5.0_dp/)
+
+        ! Initialise normals and magnetisation for each face
+    do c1 = 1, size(bar%faces)
+        bar%faces(c1)%normal = cross_product((bar%faces(c1)%vertices(1, :) - bar%faces(c1)%vertices(2, :)),&
+                                            &(bar%faces(c1)%vertices(1, :) - bar%faces(c1)%vertices(4, :)))
+        bar%faces(c1)%normal = bar%faces(c1)%normal / length(bar%faces(c1)%normal)                        
+        !print*, bar%faces(c1)%normal
+
+        bar%faces(c1)%perp_magnetisation = dot_product(bar%faces(c1)%normal, (/0.0_dp, 0.0_dp, 1.0_dp/))
+        !print*, bar%faces(c1)%perp_magnetisation
+
+        bar%faces(c1)%resolution(1) = nint(length(bar%faces(c1)%vertices(1, :) - bar%faces(c1)%vertices(2, :)) / bar%dp)
+        bar%faces(c1)%resolution(2) = nint(length(bar%faces(c1)%vertices(1, :) - bar%faces(c1)%vertices(4, :)) / bar%dp)
     end do
 
+        ! File opening for data storage
     open(unit, file = "3D_plot.txt", action='write', iostat=iostat, iomsg=iomsg)
     if (iostat .ne. 0) then
         write(*,*) trim(iomsg)
         stop
     end if
 
-    do temp=0, 100
+    do
         field = (/0.0_dp, 0.0_dp, 0.0_dp/)
-        do count = 1, size(bar%faces)
-            field = field + B(bar%faces(count), position)
+            ! Sum the field strength from each face
+        do c2 = 1, size(bar%faces)
+            field = field + B(bar%faces(c2), position)
         end do
-
         field_dir = field / length(field)
+        print*, field_dir
 
         write(unit,*) position, field_dir, length(field)
 
-        position = position - (0.1_dp * field_dir)
+            ! Take small step along the field line
+        position = position + (0.1_dp * field_dir)
 
+            ! Stop point (needs modifying)
         if((field_dir(3) > 0.9_dp) .and. (position(3) < 0)) exit
     end do
 
@@ -127,8 +142,8 @@
             B = (/0.0_dp, 0.0_dp, 0.0_dp/)
 
                 ! Calculate the size of the distance step over the plane
-            dx = (face%vertices(1, :) - face%vertices(3, :)) / face%resolution(1)
-            dy = (face%vertices(1, :) - face%vertices(2, :)) / face%resolution(2)
+            dx = (face%vertices(2, :) - face%vertices(1, :)) / face%resolution(1)
+            dy = (face%vertices(4, :) - face%vertices(1, :)) / face%resolution(2)
 
 
                 ! Nested loops to step over the whole plane which is being considered
@@ -147,19 +162,6 @@
             end do
         end function
 
-        pure subroutine surface_magnetisation(self, magnetisation)
-            class(magnet_face), intent(inout)   :: self
-            real(kind = dp), intent(in)         :: magnetisation(3)
-
-            integer                             :: cell_count
-
-                ! Number of cells on plane
-            cell_count = self%resolution(1) * self%resolution(2)
-
-                ! Magnitude of magnetisation perpendicular to the plane per consideration cell
-            self%perp_magnetisation = dot_product(self%normal, magnetisation) * self%surface_area / real(cell_count, kind = dp)
-        end subroutine
-
         pure function length(vector)
             real(kind = dp), intent(in) :: vector(:)
 
@@ -174,5 +176,14 @@
             end do
 
             length = sqrt(sum)
+        end function
+
+        pure function cross_product(a, b) result(cross)
+            real(kind = dp), intent(in) :: a(3), b(3)
+            real(kind = dp)             :: cross(3)
+
+            cross(1) = (a(2) * b(3)) - (a(3) * b(2))
+            cross(2) = (a(1) * b(3)) - (a(3) * b(1))
+            cross(3) = (a(1) * b(2)) - (a(2) * b(1))
         end function
 end program
