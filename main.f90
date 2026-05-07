@@ -89,11 +89,9 @@
     do c1 = 1, size(bar%faces)
         bar%faces(c1)%normal = cross_product((bar%faces(c1)%vertices(1, :) - bar%faces(c1)%vertices(2, :)),&
                                             &(bar%faces(c1)%vertices(1, :) - bar%faces(c1)%vertices(4, :)))
-        bar%faces(c1)%normal = bar%faces(c1)%normal / length(bar%faces(c1)%normal)                        
-        !print*, bar%faces(c1)%normal
+        bar%faces(c1)%normal = bar%faces(c1)%normal / length(bar%faces(c1)%normal)
 
         bar%faces(c1)%perp_magnetisation = dot_product(bar%faces(c1)%normal, (/0.0_dp, 0.0_dp, 1.0_dp/))
-        !print*, bar%faces(c1)%perp_magnetisation
 
         bar%faces(c1)%resolution(1) = nint(length(bar%faces(c1)%vertices(1, :) - bar%faces(c1)%vertices(2, :)) / bar%dp)
         bar%faces(c1)%resolution(2) = nint(length(bar%faces(c1)%vertices(1, :) - bar%faces(c1)%vertices(4, :)) / bar%dp)
@@ -113,7 +111,6 @@
             field = field + B(bar%faces(c2), position)
         end do
         field_dir = field / length(field)
-        print*, field_dir
 
         write(unit,*) position, field_dir, length(field)
 
@@ -121,7 +118,7 @@
         position = position + (0.1_dp * field_dir)
 
             ! Stop point (needs modifying)
-        if((field_dir(3) > 0.9_dp) .and. (position(3) < 0)) exit
+        if((abs(position(1)) < 2.0_dp) .and. (abs(position(2)) < 2.0_dp) .and. (abs(position(3)) < 5.0_dp)) exit
     end do
 
     close(unit)
